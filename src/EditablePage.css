@@ -1,0 +1,20 @@
+.Page {
+    max-width: 50vw;
+    border-radius: 10px;
+    background-color: white;
+    padding: 10px;
+    min-height: 50vh;
+
+
+    margin: 0 auto;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 9px;
+
+
+}
+
+.sign-out {
+    position: absolute;
+    right: 50%;
+    bottom: 1%;
+}
