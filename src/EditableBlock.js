@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import ContentEditable from "react-contenteditable";
 import utils from "./utils";
 import SelectMenu from "./selectMenu";
@@ -25,7 +25,12 @@ class EditableBlock extends React.Component {
           y: null
         }
     };
+
     }
+    componentDidMount() {
+        this.setState({ html: this.props.html, tag: this.props.tag });
+    }
+ 
     onKeyUpHandler(e) {
         if (e.key === "/") {
           this.openSelectMenuHandler();
@@ -56,10 +61,7 @@ class EditableBlock extends React.Component {
           this.closeSelectMenuHandler();
         });
       }
-  
-    componentDidMount() {
-      this.setState({ html: this.props.html, tag: this.props.tag });
-    }
+
 
     onKeyDownHandler(e) {
         if (e.key === "/") {
@@ -87,6 +89,7 @@ class EditableBlock extends React.Component {
     componentDidUpdate(prevProps, prevState) {
       const htmlChanged = prevState.html !== this.state.html;
       const tagChanged = prevState.tag !== this.state.tag;
+
       if (htmlChanged || tagChanged) {
         this.props.updatePage({
           id: this.props.id,

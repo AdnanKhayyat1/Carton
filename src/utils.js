@@ -1,5 +1,5 @@
 const uid = () => {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    return (Date.now() + Math.random()).toFixed();
   };
 const setCaretToEnd = (element) => {
     const range = document.createRange();
