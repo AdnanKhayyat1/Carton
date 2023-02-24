@@ -1,8 +1,9 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import EditableBlock from "./EditableBlock";
 import utils from "./utils";
 import "./EditablePage.css";
 import { supabase } from "./supabaseClient";
+import Header from "./Header";
 const initialBlock = { id: utils.uid(), html: "", tag: "p" };
 
 // Imports
@@ -17,7 +18,7 @@ class EditablePage extends React.Component {
     this.pageID = "abc123";
     this.state = { blocks: [initialBlock] };
   }
-  componentDidMount = async() => {
+  componentDidMount = async () => {
     try {
       const { data, error } = await supabase.from("blocks").select();
 
@@ -32,8 +33,7 @@ class EditablePage extends React.Component {
     } catch (error) {
       alert(error.error_description || error.message);
     }
-
-  }
+  };
   signOut = async (e) => {
     const { error } = await supabase.auth.signOut();
     try {
@@ -63,7 +63,10 @@ class EditablePage extends React.Component {
   }
   async deleteBlockFromDB(blockID) {
     try {
-      const { error } = await supabase.from("blocks").delete().eq("id", blockID);
+      const { error } = await supabase
+        .from("blocks")
+        .delete()
+        .eq("id", blockID);
 
       if (error) throw error;
     } catch (error) {
@@ -87,8 +90,8 @@ class EditablePage extends React.Component {
   addBlockHandler(currentBlock) {
     const newBlock = { id: utils.uid(), html: "", tag: "p" };
     const blocks = this.state.blocks;
-    console.log('new block')
-    console.log(blocks)
+    console.log("new block");
+    console.log(blocks);
     const index = blocks.map((b) => b.id).indexOf(currentBlock.id);
     const updatedBlocks = [...blocks];
     updatedBlocks.splice(index + 1, 0, newBlock);
@@ -113,6 +116,8 @@ class EditablePage extends React.Component {
 
   render() {
     return (
+      <>
+        <Header/>
       <div className="Page">
         {this.state.blocks.map((block, key) => {
           return (
@@ -134,6 +139,7 @@ class EditablePage extends React.Component {
           Sign out
         </button>
       </div>
+      </>
     );
   }
 }
