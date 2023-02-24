@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import EditableBlock from "./EditableBlock";
-import utils from './utils'
-import './EditablePage.css';
+import utils from "./utils";
+import "./EditablePage.css";
 import { supabase } from "./supabaseClient";
+import Header from "./Header";
 const initialBlock = { id: utils.uid(), html: "", tag: "p" };
 
 // Imports
@@ -14,25 +15,63 @@ class EditablePage extends React.Component {
     this.addBlockHandler = this.addBlockHandler.bind(this);
     this.deleteBlockHandler = this.deleteBlockHandler.bind(this);
     this.saveLayout = this.saveLayout.bind(this);
-    this.state = { blocks: [initialBlock], id:'abc123' };
+    this.pageID = "abc123";
+    this.state = { blocks: [initialBlock] };
   }
+  componentDidMount = async () => {
+    try {
+      const { data, error } = await supabase.from("blocks").select();
+
+      if (error) throw error;
+
+      const blocksToLoad = data.map((newBlock) => ({
+        id: newBlock.id,
+        html: newBlock.html,
+        tag: newBlock.tag,
+      }));
+      this.setState({ blocks: blocksToLoad });
+    } catch (error) {
+      alert(error.error_description || error.message);
+    }
+  };
   signOut = async (e) => {
     const { error } = await supabase.auth.signOut();
     try {
       if (error) {
-        throw error
+        throw error;
       }
     } catch (error) {
-      alert(error.error_description || error.message)
+      alert(error.error_description || error.message);
+    }
+  };
+  async saveLayout() {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    const recordsToAdd = this.state.blocks.map((block) => ({
+      ...block,
+      user_id: user.id,
+      page_id: this.pageID,
+    }));
+    try {
+      const { error } = await supabase.from("blocks").upsert(recordsToAdd);
+
+      if (error) throw error;
+    } catch (error) {
+      alert(error.error_description || error.message);
     }
   }
-  async saveLayout(){
-    this.state.blocks.map((block) => {
-      console.log(block);
-    })
-    const res = await supabase.from('blocks').insert(this.state.blocks).execute();
+  async deleteBlockFromDB(blockID) {
+    try {
+      const { error } = await supabase
+        .from("blocks")
+        .delete()
+        .eq("id", blockID);
 
-
+      if (error) throw error;
+    } catch (error) {
+      alert(error.error_description || error.message);
+    }
   }
 
   updatePageHandler(updatedBlock) {
@@ -42,14 +81,17 @@ class EditablePage extends React.Component {
     updatedBlocks[index] = {
       ...updatedBlocks[index],
       tag: updatedBlock.tag,
-      html: updatedBlock.html
+      html: updatedBlock.html,
     };
+
     this.setState({ blocks: updatedBlocks });
   }
 
   addBlockHandler(currentBlock) {
     const newBlock = { id: utils.uid(), html: "", tag: "p" };
     const blocks = this.state.blocks;
+    console.log("new block");
+    console.log(blocks);
     const index = blocks.map((b) => b.id).indexOf(currentBlock.id);
     const updatedBlocks = [...blocks];
     updatedBlocks.splice(index + 1, 0, newBlock);
@@ -74,6 +116,8 @@ class EditablePage extends React.Component {
 
   render() {
     return (
+      <>
+        <Header/>
       <div className="Page">
         {this.state.blocks.map((block, key) => {
           return (
@@ -87,15 +131,15 @@ class EditablePage extends React.Component {
               deleteBlock={this.deleteBlockHandler}
             />
           );
-
         })}
-          <button className="save-layout" onClick={this.saveLayout}>
-            Save layout
-          </button>
-          <button className="sign-out" onClick={this.signOut}>
-            Sign out
-          </button>
+        <button className="save-layout" onClick={this.saveLayout}>
+          Save layout
+        </button>
+        <button className="sign-out" onClick={this.signOut}>
+          Sign out
+        </button>
       </div>
+      </>
     );
   }
 }

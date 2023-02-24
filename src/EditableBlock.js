@@ -1,8 +1,9 @@
-import React from "react";
+import React, {useEffect} from "react";
 import ContentEditable from "react-contenteditable";
 import utils from "./utils";
 import SelectMenu from "./selectMenu";
 import './EditableBlock.css';
+import BlockSettings from "./BlockSettings";
 
 class EditableBlock extends React.Component {
     constructor(props) {
@@ -14,6 +15,8 @@ class EditableBlock extends React.Component {
       this.tagSelectionHandler = this.tagSelectionHandler.bind(this);
       this.onChangeHandler = this.onChangeHandler.bind(this);
       this.contentEditable = React.createRef();
+      this.onMouseEnterHandler = this.onMouseEnterHandler.bind(this);
+      this.onMouseLeaveHandler = this.onMouseLeaveHandler.bind(this);
       this.state = {
         htmlBackup: null,
         html: "",
@@ -23,9 +26,15 @@ class EditableBlock extends React.Component {
         selectMenuPosition: {
           x: null,
           y: null
-        }
+        },
+        showIcon: false,
     };
+
     }
+    componentDidMount() {
+        this.setState({ html: this.props.html, tag: this.props.tag });
+    }
+ 
     onKeyUpHandler(e) {
         if (e.key === "/") {
           this.openSelectMenuHandler();
@@ -56,10 +65,7 @@ class EditableBlock extends React.Component {
           this.closeSelectMenuHandler();
         });
       }
-  
-    componentDidMount() {
-      this.setState({ html: this.props.html, tag: this.props.tag });
-    }
+
 
     onKeyDownHandler(e) {
         if (e.key === "/") {
@@ -87,6 +93,7 @@ class EditableBlock extends React.Component {
     componentDidUpdate(prevProps, prevState) {
       const htmlChanged = prevState.html !== this.state.html;
       const tagChanged = prevState.tag !== this.state.tag;
+
       if (htmlChanged || tagChanged) {
         this.props.updatePage({
           id: this.props.id,
@@ -99,10 +106,22 @@ class EditableBlock extends React.Component {
     onChangeHandler(e) {
       this.setState({ html: e.target.value });
     }
+    onMouseEnterHandler(){
+        this.setState({showIcon: true})
+    }
+    onMouseLeaveHandler(){
+        this.setState({showIcon: false})
+    }
+
   
     render() {
         return (
-          <>
+          <div className="block-container"
+            onMouseEnter={this.onMouseEnterHandler}
+            onMouseLeave={this.onMouseLeaveHandler}>
+            {this.state.showIcon && (
+                <BlockSettings/>
+            )}
             {this.state.selectMenuIsOpen && (
               <SelectMenu
                 position={this.state.selectMenuPosition}
@@ -119,7 +138,7 @@ class EditableBlock extends React.Component {
               onKeyDown={this.onKeyDownHandler}
               onKeyUp={this.onKeyUpHandler}
             />
-          </>
+          </div>
         );
       }
   }

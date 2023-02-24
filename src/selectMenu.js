@@ -1,5 +1,6 @@
 import React from "react";
 import {matchSorter} from 'match-sorter';
+import './SelectMenu.css'
 
 
 const MENU_HEIGHT = 150;
@@ -23,7 +24,13 @@ const allowedTags = [
     id: "paragraph",
     tag: "p",
     label: "Paragraph"
-  }
+  },
+  {
+    id: "list",
+    tag: "li",
+    label: "List"
+  },
+
 ];
 
 class SelectMenu extends React.Component {
@@ -97,7 +104,7 @@ class SelectMenu extends React.Component {
             const isSelected = this.state.items.indexOf(item) === selectedItem;
             return (
               <div
-                className={isSelected ? "Selected" : null}
+                className={isSelected ? "Selected Item" : "Item"}
                 key={key}
                 role="button"
                 tabIndex="0"
