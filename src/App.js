@@ -1,9 +1,11 @@
 import './App.css';
-import EditablePage from './EditablePage.js'
+import EditablePage from './Objects/EditablePage.js'
+import EditableView from './Views/EditableView.js'
+import Navbar from './Navbar/Navbar';
 import { useState, useEffect } from 'react'
 import { supabase } from './supabaseClient'
-import Auth from './Auth'
-import Account from './Account'
+import Auth from './Authentication/Auth'
+import Account from './Authentication/Account'
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 
 
@@ -22,8 +24,14 @@ function App() {
   }, [])
   return (
     <div className="App">
-      <div className='content' style={{ padding: '50px 0 100px 0' }}>
-        {!session ? <Auth/> : <EditablePage/>}
+      <div className='content'>
+        { !session ? <Auth/> :
+        <div className='app-container'>
+          <Navbar></Navbar>
+
+          <EditableView/>
+        </div>
+        }
       </div>
     </div>
   );

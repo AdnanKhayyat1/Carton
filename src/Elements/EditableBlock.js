@@ -1,7 +1,7 @@
 import React from "react";
 import ContentEditable from "react-contenteditable";
-import utils from "./utils";
-import SelectMenu from "./selectMenu";
+import utils from "../utils";
+import SelectMenu from "../selectMenu";
 import './EditableBlock.css';
 
 class EditableBlock extends React.Component {

@@ -1,0 +1,45 @@
+.nav-container {
+    background: transparent;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* margin-top: 15px; */
+}
+
+.logo {
+    /* margin-top: 15px;
+    margin-left: 15px; */
+    margin: 15px;
+}
+
+.search-bar {
+    background: transparent;
+    border: 2px solid white;
+    width: 65%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-radius: 4px;
+    margin-top: 15px;
+}
+.search-bar input {
+    background: transparent;
+    width: 100%;
+    text-align: left;
+    color: white;
+    padding: 10px;
+    font-size: 14px;
+    border: none;
+    font-weight: 700;
+}
+
+.profile {
+    /* margin-top: 15px; */
+    margin: 10px;
+}
+.profile button {
+   background: transparent;
+}
+
+

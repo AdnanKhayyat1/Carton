@@ -1,8 +1,8 @@
 import React from "react";
-import EditableBlock from "./EditableBlock";
-import utils from './utils'
+import EditableBlock from "../Elements/EditableBlock";
+import utils from '../utils'
 import './EditablePage.css';
-import { supabase } from "./supabaseClient";
+import { supabase } from "../supabaseClient";
 const initialBlock = { id: utils.uid(), html: "", tag: "p" };
 
 // Imports
@@ -75,6 +75,7 @@ class EditablePage extends React.Component {
   render() {
     return (
       <div className="Page">
+
         {this.state.blocks.map((block, key) => {
           return (
             <EditableBlock
